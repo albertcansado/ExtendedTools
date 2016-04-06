@@ -116,9 +116,8 @@ class extended_tools_opts {
                     $detailpage = '';
                 }
             }
-
             if ($detailpage != '') {
-                $params['cd_origpage'] = (isset($params['returnid'])) ? $params['returnid'] : '';
+                $params['cd_origpage'] = $returnid;
             }
         }
         return $detailpage;
