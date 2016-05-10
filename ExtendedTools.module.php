@@ -60,7 +60,7 @@ class ExtendedTools extends CGExtensions {
     }
 
     public function GetVersion() {
-        return '1.3.3';
+        return '2.0.0';
     }
 
     public function GetHelp() {
