@@ -33,11 +33,6 @@
 
 class extended_tools_opts {
 
-    public function __construct() {
-
-// construct
-    }
-
     public static function where_statement($output, $subject) {
         return substr($output, 0, strlen($subject));
     }
@@ -46,7 +41,6 @@ class extended_tools_opts {
      * re-arrange an array of arrays into a hash of arrays
      * by a specified key/value.
      */
-
     static public function to_hash($input, $key, $value) {
         $tmp = array();
         if (is_array($input)) {
@@ -63,14 +57,38 @@ class extended_tools_opts {
      * re-arrange an array of objects into a hash of arrays
      * by a specified key/value.
      */
-
     static public function object_to_hash($input, $key, $value) {
         $tmp = array();
+        #$numParams = (is_array($key) && isset($key['params'])) ? count($key['params']) : 0;
         if (is_array($input)) {
             foreach ($input as $one) {
-                if (!isset($one->$key) || !isset($one->$value))
-                    continue;
-                $tmp[$one->$key] = $one->$value;
+                if (is_array($key)) {
+                    $formatParams = array();
+                    foreach ($key['params'] as $param) {
+                        //if (isset($one->{$param})) {
+                        $formatParams[$param] = (isset($one->{$param})) ? $one->{$param} : '';
+                        //}
+                    }
+
+                    /*if (!isset($one->{$value}) || count($formatParams) !== $numParams) {
+                        continue;
+                    }*/
+                    if (!isset($one->{$value})) {
+                        continue;
+                    }
+
+                    $aux_key = str_replace(
+                        array_keys($formatParams),
+                        array_values($formatParams),
+                        $key['format']
+                    );
+                    $tmp[$aux_key] = $one->{$value};
+                } else {
+                    if (!isset($one->{$key}) || !isset($one->{$value})) {
+                        continue;
+                    }
+                    $tmp[$one->{$key}] = $one->{$value};
+                }
             }
         }
         return $tmp;
@@ -116,8 +134,9 @@ class extended_tools_opts {
                     $detailpage = '';
                 }
             }
+
             if ($detailpage != '') {
-                $params['cd_origpage'] = $returnid;
+                $params['cd_origpage'] = (isset($params['returnid'])) ? $params['returnid'] : '';
             }
         }
         return $detailpage;
